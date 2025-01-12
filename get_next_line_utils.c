@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:23:46 by restevez          #+#    #+#             */
-/*   Updated: 2025/01/12 17:14:28 by restevez         ###   ########.fr       */
+/*   Updated: 2025/01/12 19:52:11 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,12 @@ void	append_str(t_str_list **list, char *str)
 	t_str_list	*last_str;
 	t_str_list	*new_str;
 
-	if (!(*list))
+	if ((*list)->empty)
 	{
 		(*list)->str = str;
+		write(1, "\nFirst list: ", 13);
 		write(1, (*list)->str, BUFFER_SIZE);
+		(*list)->empty = 0;
 		return ;
 	}
 	new_str = malloc(sizeof(t_str_list));
@@ -57,6 +59,8 @@ void	append_str(t_str_list **list, char *str)
 	while (last_str)
 		last_str = last_str->next;
 	new_str->str = str;
+	new_str->empty = 0;
+	write(1, "\nSecond list: ", 14);
 	write(1, new_str->str, BUFFER_SIZE);
 	new_str->next = NULL;
 }
