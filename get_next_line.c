@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:18:07 by restevez          #+#    #+#             */
-/*   Updated: 2025/01/12 17:08:05 by restevez         ###   ########.fr       */
+/*   Updated: 2025/01/12 19:49:00 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ char	*get_strings(int fd)
 	str = malloc(BUFFER_SIZE + 1);
 	chr_read = 1;
 	buff = malloc(sizeof(t_str_list));
+	buff->empty = 1;
 	while (!ft_strchr(str, '\n'))
 	{
 		chr_read = read(fd, str, BUFFER_SIZE);

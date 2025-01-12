@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:23:38 by restevez          #+#    #+#             */
-/*   Updated: 2025/01/12 14:26:29 by restevez         ###   ########.fr       */
+/*   Updated: 2025/01/12 19:48:41 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ typedef struct str_list
 {
 	char			*str;
 	struct str_list	*next;
+	size_t			empty;
 }	t_str_list;
 
 char		*get_next_line(int fd);
