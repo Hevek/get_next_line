@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:23:46 by restevez          #+#    #+#             */
-/*   Updated: 2025/01/12 12:10:14 by restevez         ###   ########.fr       */
+/*   Updated: 2025/01/12 17:14:28 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,21 +41,27 @@ void	append_str(t_str_list **list, char *str)
 	t_str_list	*last_str;
 	t_str_list	*new_str;
 
+	if (!(*list))
+	{
+		(*list)->str = str;
+		write(1, (*list)->str, BUFFER_SIZE);
+		return ;
+	}
 	new_str = malloc(sizeof(t_str_list));
-	last_str = (*list)->next;
-	while (last_str->next)
-		last_str = last_str->next;
 	if (!new_str)
 	{
 		free_list(list);
 		return ;
 	}
-	(*list)->next = new_str;
+	last_str = (*list)->next;
+	while (last_str)
+		last_str = last_str->next;
 	new_str->str = str;
+	write(1, new_str->str, BUFFER_SIZE);
 	new_str->next = NULL;
 }
-
-char	*fill_str(t_str_list *list, size_t len)
+/*
+char	*fill_line(t_str_list *list, size_t len)
 {
 	char	*str;
 
@@ -79,4 +85,15 @@ char	*ft_strcat(char *dest, char *src)
 		*dest++ = *src++;
 	*dest = '\0';
 	return (ret);
+}
+ */
+
+char	*ft_strchr(const char *s, int c)
+{
+	while (*s != (char) c)
+	{
+		if (!*s++)
+			return (NULL);
+	}
+	return ((char *) s);
 }

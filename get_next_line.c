@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:18:07 by restevez          #+#    #+#             */
-/*   Updated: 2025/01/12 12:13:06 by restevez         ###   ########.fr       */
+/*   Updated: 2025/01/12 17:08:05 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,34 +43,41 @@ char	*get_next_line(int fd)
 {
 	char	*next_line;
 
-	next_line = get_line(fd);
+	next_line = get_strings(fd);
 	if (next_line == NULL)
 		return (NULL);
 	while (next_line)
 		write(1, next_line++, 1);
+	free(next_line);
 	return ("\0");
 }
 
-char	*get_line(int fd)
+char	*get_strings(int fd)
 {
-	static t_str_list	*buff;
+	static t_str_list	*buff = NULL;
+	int					chr_read;
 	char				*str;
 
 	str = malloc(BUFFER_SIZE + 1);
-	while (read(fd, str, BUFFER_SIZE))
+	chr_read = 1;
+	buff = malloc(sizeof(t_str_list));
+	while (!ft_strchr(str, '\n'))
 	{
+		chr_read = read(fd, str, BUFFER_SIZE);
+		if (chr_read == -1 || chr_read == 0)
+			break ;
+		str[BUFFER_SIZE] = '\0';
 		append_str(&buff, str);
-		free(str);
 	}
-	get_str(buff);
-	return (str);
+	// write(1, str, BUFFER_SIZE); get_line(buff)
+	return (NULL);
 }
 
-char	*get_str(t_str_list *list)
+/* char	*get_line(t_str_list *list)
 {
 	t_str_list	*tmp;
 	size_t		len;
-	char		*str;
+	char		*line;
 	int			i;
 
 	tmp = list;
@@ -82,7 +89,9 @@ char	*get_str(t_str_list *list)
 			len++;
 		tmp = tmp->next;
 	}
-	str = fill_str(list, len);
-	write(1, str, len);
-	return (str);
+	line = fill_line(list, len);
+	write(1, line, len);
+	return (line);
+	return (NULL);
 }
+ */
