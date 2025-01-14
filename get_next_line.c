@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:18:07 by restevez          #+#    #+#             */
-/*   Updated: 2025/01/14 04:29:23 by restevez         ###   ########.fr       */
+/*   Updated: 2025/01/14 05:20:38 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,11 @@ Please note that the returned line should include the terminating \n
 character if it is found (Hence, if the file does not terminate in \n, there's
 nothing to include at the EOL).
 */
-
+/*
+TO-DOs:
+[] max of 10 function because number of turn in files;
+[] explore corner cases, run testers;
+ */
 int	main(int argc, char *argv[])
 {
 	char	*str;

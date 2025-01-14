@@ -6,34 +6,15 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:23:46 by restevez          #+#    #+#             */
-/*   Updated: 2025/01/14 04:22:35 by restevez         ###   ########.fr       */
+/*   Updated: 2025/01/14 05:19:49 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-/*
-buff = malloc(sizeof(t_str_list));
-i = -1;
-buff->str = malloc(BUFFER_SIZE + 1);
-if (!buff->str)
-	return (NULL);
-read(fd, buff->str, BUFFER_SIZE);
-buff->str[BUFFER_SIZE] = '\0';
-buff->next = NULL;
-*/
-
-char	*free_list(t_str_list **str)
+char	*cleanup_list(t_str_list **list)
 {
-	t_str_list	*next_str;
-
-	next_str = malloc(sizeof(t_str_list));
-	next_str->next = (*str)->next;
-	free(str);
-	while (next_str->next != NULL)
-		free_list(&next_str->next);
-	free(next_str);
-	return (NULL);
+	return ((*list)->str);
 }
 
 void	append_str(t_str_list **list, char *str)
@@ -51,7 +32,7 @@ void	append_str(t_str_list **list, char *str)
 	new_str = malloc(sizeof(t_str_list));
 	if (!new_str)
 	{
-		free_list(list);
+		cleanup_list(list);
 		return ;
 	}
 	last_str = (*list);
@@ -73,5 +54,18 @@ char	*fill_line(t_str_list *list, size_t len)
 		ft_strcat(str, list->str, len);
 		list = list->next;
 	}
+	/* while (next_str->next != NULL) // Cleanup list using len
+	{
+		str = next_str->str;
+		while (*str && *str != '\n')
+			str++;
+		if (*str == '\n')
+		{
+			str = ft_strdup(str);
+			free(next_str->str);
+			next_str->str = str;
+			break ;
+		}
+	} */
 	return (str);
 }
