@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:23:46 by restevez          #+#    #+#             */
-/*   Updated: 2025/01/12 19:52:11 by restevez         ###   ########.fr       */
+/*   Updated: 2025/01/14 04:22:35 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,9 @@ void	append_str(t_str_list **list, char *str)
 
 	if ((*list)->empty)
 	{
-		(*list)->str = str;
-		write(1, "\nFirst list: ", 13);
-		write(1, (*list)->str, BUFFER_SIZE);
+		(*list)->str = ft_strdup(str);
 		(*list)->empty = 0;
+		(*list)->next = NULL;
 		return ;
 	}
 	new_str = malloc(sizeof(t_str_list));
@@ -55,16 +54,15 @@ void	append_str(t_str_list **list, char *str)
 		free_list(list);
 		return ;
 	}
-	last_str = (*list)->next;
-	while (last_str)
+	last_str = (*list);
+	while (last_str->next)
 		last_str = last_str->next;
-	new_str->str = str;
+	new_str->str = ft_strdup(str);
 	new_str->empty = 0;
-	write(1, "\nSecond list: ", 14);
-	write(1, new_str->str, BUFFER_SIZE);
 	new_str->next = NULL;
+	last_str->next = new_str;
 }
-/*
+
 char	*fill_line(t_str_list *list, size_t len)
 {
 	char	*str;
@@ -72,32 +70,8 @@ char	*fill_line(t_str_list *list, size_t len)
 	str = malloc(len + 1);
 	while (list)
 	{
-		ft_strcat(str, (char *) list->str);
+		ft_strcat(str, list->str, len);
 		list = list->next;
 	}
 	return (str);
-}
-
-char	*ft_strcat(char *dest, char *src)
-{
-	char	*ret;
-
-	ret = dest;
-	while (*dest)
-		dest++;
-	while (*src)
-		*dest++ = *src++;
-	*dest = '\0';
-	return (ret);
-}
- */
-
-char	*ft_strchr(const char *s, int c)
-{
-	while (*s != (char) c)
-	{
-		if (!*s++)
-			return (NULL);
-	}
-	return ((char *) s);
 }
