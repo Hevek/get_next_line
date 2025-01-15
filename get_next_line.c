@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:18:07 by restevez          #+#    #+#             */
-/*   Updated: 2025/01/14 05:20:38 by restevez         ###   ########.fr       */
+/*   Updated: 2025/01/15 03:29:43 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,41 +39,45 @@ int	main(int argc, char *argv[])
 		return (1);
 	i = 0;
 	fd = open(argv[1], O_RDONLY);
-	printf("Line one: %s\n", get_next_line(fd));
-	printf("Line two: %s\n", get_next_line(fd));
+	printf("Line one: %s", get_next_line(fd));
+	printf("Line two: %s", get_next_line(fd));
 	return (0);
 }
 
 char	*get_next_line(int fd)
 {
-	char	*next_line;
+	static t_str_list	*buff = NULL;
+	char				*next_line;
 
-	next_line = get_strings(fd);
+	next_line = get_strings(fd, &buff);
 	if (next_line == NULL)
 		return (NULL);
 	return (next_line);
 }
 
-char	*get_strings(int fd)
+char	*get_strings(int fd, t_str_list **buff)
 {
-	static t_str_list	*buff = NULL;
 	int					chr_read;
 	char				*str;
 
 	str = malloc(BUFFER_SIZE + 1);
 	chr_read = 1;
-	buff = malloc(sizeof(t_str_list));
-	buff->empty = 1;
+	if (!(*buff))
+	{
+		(*buff) = malloc(sizeof(t_str_list));
+		(*buff)->empty = 1;
+	}
 	while (!ft_strchr(str, '\n'))
 	{
 		chr_read = read(fd, str, BUFFER_SIZE);
 		if (chr_read == -1 || chr_read == 0)
 			break ;
 		str[BUFFER_SIZE] = '\0';
-		append_str(&buff, str);
+		append_str(&(*buff), str);
 	}
 	free(str);
-	str = get_line(buff);
+	str = get_line((*buff));
+	// cleanup_list(&(*buff));
 	if (!str)
 		return (NULL);
 	return (str);
@@ -95,9 +99,8 @@ char	*get_line(t_str_list *list)
 			len++;
 		tmp = tmp->next;
 	}
-	line = fill_line(list, len);
+	line = fill_line(&list, len);
 	if (!line)
 		return (NULL);
 	return (line);
 }
-
