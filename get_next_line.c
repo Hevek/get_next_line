@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:18:07 by restevez          #+#    #+#             */
-/*   Updated: 2025/01/15 03:29:43 by restevez         ###   ########.fr       */
+/*   Updated: 2025/01/15 03:54:10 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	main(int argc, char *argv[])
 	i = 0;
 	fd = open(argv[1], O_RDONLY);
 	printf("Line one: %s", get_next_line(fd));
-	printf("Line two: %s", get_next_line(fd));
+	// printf("Line two: %s", get_next_line(fd));
 	return (0);
 }
 
@@ -77,7 +77,7 @@ char	*get_strings(int fd, t_str_list **buff)
 	}
 	free(str);
 	str = get_line((*buff));
-	// cleanup_list(&(*buff));
+	cleanup_list(&(*buff));
 	if (!str)
 		return (NULL);
 	return (str);

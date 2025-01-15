@@ -6,21 +6,49 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:23:46 by restevez          #+#    #+#             */
-/*   Updated: 2025/01/15 03:29:10 by restevez         ###   ########.fr       */
+/*   Updated: 2025/01/15 04:05:56 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
+/*
+Run through the list
+while (node exists)
+{
+	if (node->next == NULL)
+	{
+		if (node->str contains '\n')
+		{
+			this one we do not cleanup, return;
+		}
+		else
+			free();
+	}
+	else
+		free();
+}
+*/
 void	*cleanup_list(t_str_list **list)
 {
 	t_str_list	*cleaner;
 
 	while (*list)
 	{
-		cleaner = (*list)->next;
-		free(*list);
-		*list = cleaner;
+		cleaner = *list;
+		if ((*list)->next == NULL)
+		{
+			write(1, (*list)->str, BUFFER_SIZE);
+			/* if (ft_strchr((*list)->str, '\n'))
+			{
+				return (NULL);
+			}
+			else
+				free(*list); */
+		}
+		else
+			free(*list);
+		*list = cleaner->next;
 	}
 	return (NULL);
 }
@@ -72,7 +100,6 @@ char	*fill_line(t_str_list **list, size_t len)
 				(*list)->empty = 1;
 				append_str(&(*list), (*list)->str);
 				(*list)->next = NULL;
-				printf("String: %s | Empty: %zu \n\n", str, (*list)->empty);
 				return (str);
 			}
 		}
