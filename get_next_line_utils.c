@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:23:46 by restevez          #+#    #+#             */
-/*   Updated: 2025/01/15 04:05:56 by restevez         ###   ########.fr       */
+/*   Updated: 2025/01/23 21:51:21 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,28 +29,15 @@ while (node exists)
 		free();
 }
 */
-void	*cleanup_list(t_str_list **list)
+void	cleanup_list(t_str_list **list)
 {
-	t_str_list	*cleaner;
+	t_str_list	*l;
 
-	while (*list)
-	{
-		cleaner = *list;
-		if ((*list)->next == NULL)
-		{
-			write(1, (*list)->str, BUFFER_SIZE);
-			/* if (ft_strchr((*list)->str, '\n'))
-			{
-				return (NULL);
-			}
-			else
-				free(*list); */
-		}
-		else
-			free(*list);
-		*list = cleaner->next;
-	}
-	return (NULL);
+	l = *list;
+	if (l)
+		return ;
+	else
+		return ;
 }
 
 void	append_str(t_str_list **list, char *str)
