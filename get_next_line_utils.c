@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:23:46 by restevez          #+#    #+#             */
-/*   Updated: 2025/02/06 01:29:08 by restevez         ###   ########.fr       */
+/*   Updated: 2025/02/06 01:34:23 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,14 +32,14 @@ while (node exists)
 void	cleanup_list(t_str_list **list)
 {
 	t_str_list	*temp;
-	// t_str_list	*prev;
+	t_str_list	*prev;
 	char		*s_temp;
 
 	temp = *list;
 	s_temp = NULL;
-	while (temp)
+	while (temp->next != NULL)
 	{
-		s_temp = ft_strchr(temp->str, '\n');
+		s_temp = ft_strchr((const char *) temp->str, '\n');
 		if (s_temp)
 		{
 			s_temp = ft_strdup(++s_temp);
@@ -48,9 +48,9 @@ void	cleanup_list(t_str_list **list)
 			*list = temp;
 			return ;
 		}
-		// prev = temp;
+		prev = temp;
 		temp = temp->next;
-		// free(prev);
+		free(prev);
 	}
 	*list = temp;
 	return ;
