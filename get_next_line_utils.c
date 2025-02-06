@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:23:46 by restevez          #+#    #+#             */
-/*   Updated: 2025/02/06 02:18:37 by restevez         ###   ########.fr       */
+/*   Updated: 2025/02/06 03:26:01 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,34 +83,6 @@ void	append_str(t_str_list **list, char *str)
 	last_node->next = new_node;
 }
 
-char	*fill_line(t_str_list **list, size_t len)
-{
-	char		*str;
-	size_t		str_len;
-
-	str_len = 0;
-	str = malloc(len + 1);
-	while ((*list))
-	{
-		ft_strcat(str, (*list)->str, len);
-		if ((*list)->next == NULL)
-		{
-			while (*((*list)->str) && *((*list)->str) != '\n' && ++str_len)
-				(*list)->str++;
-			if (*((*list)->str) == '\n' && str_len < BUFFER_SIZE)
-			{
-				(*list)->str++;
-				(*list)->empty = 1;
-				append_str(&(*list), (*list)->str);
-				(*list)->next = NULL;
-				return (str);
-			}
-		}
-		(*list) = (*list)->next;
-	}
-	return (str);
-}
-
 char	*ft_strcat(char *dest, char *src, size_t len)
 {
 	char	*ret;
@@ -149,4 +121,14 @@ char	*ft_strdup(const char *s)
 		duplicate[i] = s[i];
 	duplicate[i] = '\0';
 	return (duplicate);
+}
+
+char	*ft_strchr(const char *s, int c)
+{
+	while (*s != (char) c)
+	{
+		if (!*s++)
+			return (NULL);
+	}
+	return ((char *) s);
 }

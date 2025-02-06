@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:18:07 by restevez          #+#    #+#             */
-/*   Updated: 2025/02/06 02:18:06 by restevez         ###   ########.fr       */
+/*   Updated: 2025/02/06 03:50:12 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,23 +28,27 @@ TO-DOs:
 [] max of 10 function because number of turn in files;
 [] explore corner cases, run testers;
  */
-/* int	main(int argc, char *argv[])
+int	main(int argc, char *argv[])
 {
 	char	*str;
 	int		fd;
+	int		j;
 
 	str = NULL;
 	if (argc < 2)
 		return (1);
 	fd = open(argv[1], O_RDONLY);
 	str = get_next_line(fd);
-	printf("Line one: %s", str);
-	str = get_next_line(fd);
-	printf("Line two: %s", str);
+	j = 0;
+	while (str)
+	{
+		printf("Line %d: %s", ++j, str);
+		str = get_next_line(fd);
+	}
 	// printf("Line two: %s", get_next_line(fd));
 	return (0);
 }
- */
+
 char	*get_next_line(int fd)
 {
 	static t_str_list	*buff = NULL;
@@ -74,7 +78,7 @@ char	*get_strings(int fd, t_str_list **buff)
 	{
 		chr_read = read(fd, str, BUFFER_SIZE);
 		if (chr_read == -1 || chr_read == 0)
-			break ;
+			return (free(str), cleanup_list(&(*buff)), NULL);
 		str[BUFFER_SIZE] = '\0';
 		append_str(&(*buff), str);
 	}
@@ -82,7 +86,7 @@ char	*get_strings(int fd, t_str_list **buff)
 	str = ft_get_line((*buff));
 	cleanup_list(&(*buff));
 	if (!str)
-		return (NULL);
+		return (free(str), NULL);
 	return (str);
 }
 
@@ -101,7 +105,10 @@ char	*ft_get_line(t_str_list *list)
 		while (tmp->str[++i] && tmp->str[i] != '\n')
 			len++;
 		if (tmp->str[i] == '\n')
+		{
 			len++;
+			// break ;
+		}
 		tmp = tmp->next;
 	}
 	line = fill_line(&list, len);
@@ -110,12 +117,30 @@ char	*ft_get_line(t_str_list *list)
 	return (line);
 }
 
-char	*ft_strchr(const char *s, int c)
+char	*fill_line(t_str_list **list, size_t len)
 {
-	while (*s != (char) c)
+	char		*str;
+	size_t		str_len;
+
+	str_len = 0;
+	str = malloc(len + 1);
+	while ((*list))
 	{
-		if (!*s++)
-			return (NULL);
+		ft_strcat(str, (*list)->str, len);
+		if ((*list)->next == NULL)
+		{
+			while (*((*list)->str) && *((*list)->str) != '\n' && ++str_len)
+				(*list)->str++;
+			if (*((*list)->str) == '\n' && str_len < BUFFER_SIZE)
+			{
+				(*list)->str++;
+				(*list)->empty = 1;
+				append_str(&(*list), (*list)->str);
+				(*list)->next = NULL;
+				return (str);
+			}
+		}
+		(*list) = (*list)->next;
 	}
-	return ((char *) s);
+	return (str);
 }
