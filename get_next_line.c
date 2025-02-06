@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:18:07 by restevez          #+#    #+#             */
-/*   Updated: 2025/02/06 01:28:09 by restevez         ###   ########.fr       */
+/*   Updated: 2025/02/06 02:18:06 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ TO-DOs:
 [] max of 10 function because number of turn in files;
 [] explore corner cases, run testers;
  */
-int	main(int argc, char *argv[])
+/* int	main(int argc, char *argv[])
 {
 	char	*str;
 	int		fd;
@@ -44,12 +44,14 @@ int	main(int argc, char *argv[])
 	// printf("Line two: %s", get_next_line(fd));
 	return (0);
 }
-
+ */
 char	*get_next_line(int fd)
 {
 	static t_str_list	*buff = NULL;
 	char				*next_line;
 
+	if (fd <= 0)
+		return (NULL);
 	next_line = get_strings(fd, &buff);
 	if (next_line == NULL)
 		return (NULL);
@@ -77,14 +79,14 @@ char	*get_strings(int fd, t_str_list **buff)
 		append_str(&(*buff), str);
 	}
 	free(str);
-	str = get_line((*buff));
+	str = ft_get_line((*buff));
 	cleanup_list(&(*buff));
 	if (!str)
 		return (NULL);
 	return (str);
 }
 
-char	*get_line(t_str_list *list)
+char	*ft_get_line(t_str_list *list)
 {
 	t_str_list	*tmp;
 	size_t		len;
@@ -96,7 +98,9 @@ char	*get_line(t_str_list *list)
 	while (tmp)
 	{
 		i = -1;
-		while (tmp->str[++i] && tmp->str[i - 1] != '\n')
+		while (tmp->str[++i] && tmp->str[i] != '\n')
+			len++;
+		if (tmp->str[i] == '\n')
 			len++;
 		tmp = tmp->next;
 	}
