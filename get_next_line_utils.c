@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:23:46 by restevez          #+#    #+#             */
-/*   Updated: 2025/01/23 21:51:21 by restevez         ###   ########.fr       */
+/*   Updated: 2025/02/06 01:29:08 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,29 @@ while (node exists)
 */
 void	cleanup_list(t_str_list **list)
 {
-	t_str_list	*l;
+	t_str_list	*temp;
+	// t_str_list	*prev;
+	char		*s_temp;
 
-	l = *list;
-	if (l)
-		return ;
-	else
-		return ;
+	temp = *list;
+	s_temp = NULL;
+	while (temp)
+	{
+		s_temp = ft_strchr(temp->str, '\n');
+		if (s_temp)
+		{
+			s_temp = ft_strdup(++s_temp);
+			free(temp->str);
+			temp->str = s_temp;
+			*list = temp;
+			return ;
+		}
+		// prev = temp;
+		temp = temp->next;
+		// free(prev);
+	}
+	*list = temp;
+	return ;
 }
 
 void	append_str(t_str_list **list, char *str)
@@ -93,4 +109,44 @@ char	*fill_line(t_str_list **list, size_t len)
 		(*list) = (*list)->next;
 	}
 	return (str);
+}
+
+char	*ft_strcat(char *dest, char *src, size_t len)
+{
+	char	*ret;
+	size_t	i;
+
+	ret = dest;
+	i = 0;
+	while (*dest)
+	{
+		dest++;
+		i++;
+	}
+	while (*src && i < len)
+	{
+		i++;
+		*dest++ = *src++;
+	}
+	*dest = '\0';
+	return (ret);
+}
+
+char	*ft_strdup(const char *s)
+{
+	char	*duplicate;
+	int		i;
+
+	duplicate = NULL;
+	i = 0;
+	while (s[i] != '\0')
+		i++;
+	duplicate = malloc((sizeof(char) * i) + 1);
+	if (duplicate == NULL)
+		return (NULL);
+	i = -1;
+	while (s[++i] != '\0')
+		duplicate[i] = s[i];
+	duplicate[i] = '\0';
+	return (duplicate);
 }
