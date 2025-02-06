@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:23:38 by restevez          #+#    #+#             */
-/*   Updated: 2025/01/23 21:49:58 by restevez         ###   ########.fr       */
+/*   Updated: 2025/02/06 01:27:55 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 10
 # endif
-
 
 # include <unistd.h>
 # include <fcntl.h>
