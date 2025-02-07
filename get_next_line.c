@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:18:07 by restevez          #+#    #+#             */
-/*   Updated: 2025/02/07 02:31:05 by restevez         ###   ########.fr       */
+/*   Updated: 2025/02/07 05:49:46 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ nothing to include at the EOL).
 */
 /*
 TO-DOs:
-[] max of 10 function because number of turn in files;
+[x] max of 10 function because number of turn in files;
 [] explore corner cases, run testers;
  */
 int	main(int argc, char *argv[])
@@ -45,7 +45,6 @@ int	main(int argc, char *argv[])
 		printf("Line %d: %s", ++j, str);
 		str = get_next_line(fd);
 	}
-	// printf("Line two: %s", get_next_line(fd));
 	return (0);
 }
 
@@ -140,16 +139,18 @@ char	*ft_get_line(t_str_list *list)
 char	*fill_line(t_str_list **list, size_t len)
 {
 	char		*str;
+	size_t		str_len;
 
 	str = malloc(len + 1);
+	str_len = 0;
 	while ((*list))
 	{
 		ft_strcat(str, (*list)->str, len);
 		if ((*list)->next == NULL)
 		{
-			while (*((*list)->str) && *((*list)->str) != '\n')
+			while (*((*list)->str) && *((*list)->str) != '\n' && ++str_len)
 				(*list)->str++;
-			if (*((*list)->str) == '\n')
+			if (*((*list)->str) == '\n' && str_len < BUFFER_SIZE)
 			{
 				(*list)->str++;
 				(*list)->empty = 1;
