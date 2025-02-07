@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:18:07 by restevez          #+#    #+#             */
-/*   Updated: 2025/02/07 05:49:46 by restevez         ###   ########.fr       */
+/*   Updated: 2025/02/07 06:01:21 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,13 +150,14 @@ char	*fill_line(t_str_list **list, size_t len)
 		{
 			while (*((*list)->str) && *((*list)->str) != '\n' && ++str_len)
 				(*list)->str++;
-			if (*((*list)->str) == '\n' && str_len < BUFFER_SIZE)
+			if (*((*list)->str) == '\n')
 			{
 				(*list)->str++;
 				(*list)->empty = 1;
 				append_str(&(*list), (*list)->str);
 				(*list)->next = NULL;
-				return (str);
+				(*list) = (*list)->next;
+				continue ;
 			}
 		}
 		(*list) = (*list)->next;
