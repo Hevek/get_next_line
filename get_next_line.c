@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:18:07 by restevez          #+#    #+#             */
-/*   Updated: 2025/02/06 03:50:12 by restevez         ###   ########.fr       */
+/*   Updated: 2025/02/07 02:31:05 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ char	*ft_get_line(t_str_list *list)
 		if (tmp->str[i] == '\n')
 		{
 			len++;
-			// break ;
+			break ;
 		}
 		tmp = tmp->next;
 	}
@@ -117,21 +117,39 @@ char	*ft_get_line(t_str_list *list)
 	return (line);
 }
 
+/*
+	full string
+
+	allocate the space for full string
+	while (current node exists)
+	{
+		concatenate (full string + node->string)
+		if (this is the last node)
+		{
+			while (this char exists AND this char is not \n)
+				run through node->string
+			if (we got to the \n)
+			{
+				go to the next char in node->str
+				this node->str will be empty now
+				we add the rest of this string to a new node
+			}
+		}
+	}
+*/
 char	*fill_line(t_str_list **list, size_t len)
 {
 	char		*str;
-	size_t		str_len;
 
-	str_len = 0;
 	str = malloc(len + 1);
 	while ((*list))
 	{
 		ft_strcat(str, (*list)->str, len);
 		if ((*list)->next == NULL)
 		{
-			while (*((*list)->str) && *((*list)->str) != '\n' && ++str_len)
+			while (*((*list)->str) && *((*list)->str) != '\n')
 				(*list)->str++;
-			if (*((*list)->str) == '\n' && str_len < BUFFER_SIZE)
+			if (*((*list)->str) == '\n')
 			{
 				(*list)->str++;
 				(*list)->empty = 1;
