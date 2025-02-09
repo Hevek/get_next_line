@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:23:46 by restevez          #+#    #+#             */
-/*   Updated: 2025/02/06 03:26:01 by restevez         ###   ########.fr       */
+/*   Updated: 2025/02/09 08:33:58 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,31 +29,24 @@ while (node exists)
 		free();
 }
 */
-void	cleanup_list(t_str_list **list)
+void	destroy_list(t_str_list **list, t_str_list *cleaned, char *str)
 {
-	t_str_list	*temp;
-	t_str_list	*prev;
-	char		*s_temp;
+	t_str_list	*tmp;
 
-	temp = *list;
-	s_temp = NULL;
-	while (temp->next != NULL)
+	if (*list == NULL)
+		return ;
+	while (*list)
 	{
-		s_temp = ft_strchr((const char *) temp->str, '\n');
-		if (s_temp)
-		{
-			s_temp = ft_strdup(++s_temp);
-			free(temp->str);
-			temp->str = s_temp;
-			*list = temp;
-			return ;
-		}
-		prev = temp;
-		temp = temp->next;
-		free(prev);
+		tmp = (*list)->next;
+		free((*list)->str);
+		free(*list);
+		*list = tmp;
 	}
-	*list = temp;
-	return ;
+	*list = NULL;
+	if (cleaned->empty == 0)
+		*list = cleaned;
+	else
+		return (free(str), free(cleaned));
 }
 
 void	append_str(t_str_list **list, char *str)
@@ -71,7 +64,7 @@ void	append_str(t_str_list **list, char *str)
 	new_node = malloc(sizeof(t_str_list));
 	if (!new_node)
 	{
-		cleanup_list(&(*list));
+		destroy_list(&(*list), NULL, NULL);
 		return ;
 	}
 	last_node = (*list);

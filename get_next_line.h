@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:23:38 by restevez          #+#    #+#             */
-/*   Updated: 2025/02/06 02:18:13 by restevez         ###   ########.fr       */
+/*   Updated: 2025/02/09 08:32:51 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,8 @@ typedef struct str_list
 
 char		*get_next_line(int fd);
 char		*get_strings(int fd, t_str_list **buff);
-void		cleanup_list(t_str_list **list);
+void		destroy_list(t_str_list **list, t_str_list *cleaned, char *str);
+void		clean_list(t_str_list **list);
 void		append_str(t_str_list **list, char *str);
 char		*ft_get_line(t_str_list *list);
 char		*fill_line(t_str_list **list, size_t len);

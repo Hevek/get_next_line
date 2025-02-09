@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:18:07 by restevez          #+#    #+#             */
-/*   Updated: 2025/02/07 06:01:21 by restevez         ###   ########.fr       */
+/*   Updated: 2025/02/09 08:36:28 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ char	*get_next_line(int fd)
 	static t_str_list	*buff = NULL;
 	char				*next_line;
 
-	if (fd <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &next_line, 0) < 0)
 		return (NULL);
 	next_line = get_strings(fd, &buff);
 	if (next_line == NULL)
@@ -63,11 +63,9 @@ char	*get_next_line(int fd)
 
 char	*get_strings(int fd, t_str_list **buff)
 {
-	int					chr_read;
 	char				*str;
 
 	str = malloc(BUFFER_SIZE + 1);
-	chr_read = 1;
 	if (!(*buff))
 	{
 		(*buff) = malloc(sizeof(t_str_list));
@@ -75,15 +73,14 @@ char	*get_strings(int fd, t_str_list **buff)
 	}
 	while (!ft_strchr(str, '\n'))
 	{
-		chr_read = read(fd, str, BUFFER_SIZE);
-		if (chr_read == -1 || chr_read == 0)
-			return (free(str), cleanup_list(&(*buff)), NULL);
+		if (read(fd, str, BUFFER_SIZE) <= 0)
+			return (free(str), destroy_list(&(*buff), NULL, NULL), NULL);
 		str[BUFFER_SIZE] = '\0';
 		append_str(&(*buff), str);
 	}
 	free(str);
 	str = ft_get_line((*buff));
-	cleanup_list(&(*buff));
+	destroy_list(&(*buff), NULL, NULL);
 	if (!str)
 		return (free(str), NULL);
 	return (str);
@@ -163,4 +160,32 @@ char	*fill_line(t_str_list **list, size_t len)
 		(*list) = (*list)->next;
 	}
 	return (str);
+}
+
+void	clean_list(t_str_list **list)
+{
+	t_str_list	*last;
+	t_str_list	*cleaned;
+	size_t		i;
+	size_t		j;
+	char		*str;
+
+	str = malloc(BUFFER_SIZE + 1);
+	cleaned = malloc(sizeof(t_str_list));
+	if (str == NULL || cleaned == NULL)
+		return (free(str), free(cleaned), destroy_list(&(*list), NULL, NULL));
+	last = *list;
+	while (last->next)
+		last = last->next;
+	i = 0;
+	j = 0;
+	while (last->empty == 0 && last->str[i] != '\n')
+		i++;
+	while (last->str[i] && last->str[++i])
+		str[j++] = last->str[i];
+	str[j] = '\0';
+	cleaned->str = str;
+	cleaned->empty = 0;
+	cleaned->next = NULL;
+	destroy_list(list, cleaned, str);
 }
