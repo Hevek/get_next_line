@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:18:07 by restevez          #+#    #+#             */
-/*   Updated: 2025/02/10 19:46:43 by restevez         ###   ########.fr       */
+/*   Updated: 2025/02/10 19:58:35 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,28 @@ char	*get_next_line(int fd);
 	int		n;
 	char	test;
 
-	test = '3';
+	n = 1;
+	test = '1';
 	if (test == '1')
 	{
 		fd = open(
-"/nfs/homes/restevez/francinette/tests/get_next_line/gnlTester/tests/41_no_nl",
+"/nfs/homes/restevez/francinette/tests/get_next_line/fsoares/read_error.txt",
 				O_RDONLY);
+		line = get_next_line(fd);
+		printf("Line %d: %s", n++, line);
+		line = get_next_line(fd);
+		printf("Line %d: %s", n++, line);
+		if (BUFFER_SIZE > 100) {
+			char *temp;
+			do {
+				temp = get_next_line(fd);
+				free(temp);
+			} while (temp != NULL);
+		}
+		line = get_next_line(fd);
+		printf("Line %d: %s", n++, line);
+		close(fd);
+		return (0);
 	}
 	else if (test == '2')
 	{
@@ -56,7 +72,6 @@ char	*get_next_line(int fd);
 	{
 		fd = open("test", O_RDONLY);
 	}
-	n = 1;
 	line = get_next_line(fd);
 	while (line)
 	{
@@ -75,7 +90,7 @@ char	*get_next_line(int fd)
 
 	line = NULL;
 	if (fd == -1 || BUFFER_SIZE <= 0 || read(fd, line, 0) < 0)
-		return (NULL);
+		return (cleanup_list(&list), NULL);
 	line = fill_list(&list, fd);
 	if (!line)
 		return (cleanup_list(&list), free(list), NULL);
