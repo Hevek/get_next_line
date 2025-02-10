@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:23:46 by restevez          #+#    #+#             */
-/*   Updated: 2025/02/10 16:32:07 by restevez         ###   ########.fr       */
+/*   Updated: 2025/02/10 18:59:08 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ char	*ft_strchr(const char *s, int c)
 		if (!*s++)
 			return (NULL);
 	}
+	if (*s == '\0')
+		return (NULL);
 	return ((char *) s);
 }
 

@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:23:38 by restevez          #+#    #+#             */
-/*   Updated: 2025/02/10 16:14:11 by restevez         ###   ########.fr       */
+/*   Updated: 2025/02/10 18:45:57 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define GET_NEXT_LINE_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1000000
+#  define BUFFER_SIZE 10
 # endif
 
 # include <unistd.h>
@@ -30,7 +30,7 @@ typedef struct str_list
 }	t_str_list;
 
 char		*get_next_line(int fd);
-void		fill_list(t_str_list **list, int fd);
+char		*fill_list(t_str_list **list, int fd);
 void		append_str(t_str_list **list, char *str);
 char		*ft_strchr(const char *s, int c);
 char		*transfer_line(t_str_list **list);
@@ -38,5 +38,6 @@ size_t		get_line_size(t_str_list *list);
 void		cleanup_list(t_str_list **list);
 char		*ft_strdup(const char *s);
 void		*ft_calloc(size_t nmemb, size_t size);
+void		copy_line(t_str_list **list, char **line);
 
 #endif
