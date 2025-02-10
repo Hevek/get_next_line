@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:23:46 by restevez          #+#    #+#             */
-/*   Updated: 2025/02/10 09:48:18 by restevez         ###   ########.fr       */
+/*   Updated: 2025/02/10 11:15:09 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,17 +68,19 @@ void	cleanup_list(t_str_list **list)
 	char		*str;
 
 	tmp = *list;
-	str = ft_strchr((*list)->str, '\n');
-	while (tmp)
+	if (*list)
+		str = ft_strchr((*list)->str, '\n');
+	while (*list)
 	{
-		tmp = (*list)->next;
 		str = ft_strchr((*list)->str, '\n');
 		if (str)
 		{
+			free((*list)->str);
 			(*list)->str = ft_strdup(++str);
 			str = NULL;
 			return ;
 		}
+		tmp = (*list)->next;
 		free((*list)->str);
 		free(*list);
 		*list = tmp;

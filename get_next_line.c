@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:18:07 by restevez          #+#    #+#             */
-/*   Updated: 2025/02/10 08:48:59 by restevez         ###   ########.fr       */
+/*   Updated: 2025/02/10 11:22:07 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,25 @@
 
 char	*get_next_line(int fd);
 
-int	main(void)
+/* int	main(void)
 {
 	char	*line;
 	int		fd;
 	int		n;
 
-	fd = open("text", O_RDONLY);
+	fd = open("/nfs/homes/restevez/francinette/tests/get_next_line/fsoares/1char.txt", O_RDONLY);
 	n = 1;
 	line = get_next_line(fd);
 	while (line)
 	{
 		printf("Line %d: %s", n++, line);
+		free(line);
 		line = get_next_line(fd);
 	}
+	free(line);
 	close(fd);
 	return (0);
-}
-
+} */
 char	*get_next_line(int fd)
 {
 	static t_str_list	*list = NULL;
@@ -43,6 +44,8 @@ char	*get_next_line(int fd)
 	fill_list(&list, fd);
 	line = transfer_line(list);
 	cleanup_list(&list);
+	if (!line)
+		return (free(list), NULL);
 	return (line);
 }
 
@@ -61,7 +64,7 @@ void	fill_list(t_str_list **list, int fd)
 			return (cleanup_list(list));
 		b_read = read(fd, str, BUFFER_SIZE);
 		if (!b_read)
-			return (cleanup_list(list));
+			return (free(str), cleanup_list(list));
 		str[BUFFER_SIZE] = '\0';
 		append_str(list, str);
 	}
@@ -94,6 +97,8 @@ char	*transfer_line(t_str_list *list)
 	size_t		i;
 	size_t		j;
 
+	if (!list)
+		return (NULL);
 	line = malloc(get_line_size(list) + 1);
 	j = -1;
 	while (list)
@@ -104,8 +109,8 @@ char	*transfer_line(t_str_list *list)
 			line[++j] = list->str[i];
 			if (list->str[i] == '\n')
 			{
-				j++;
-				break ;
+				line[++j] = '\0';
+				return (line);
 			}
 		}
 		list = list->next;
