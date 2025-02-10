@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:23:38 by restevez          #+#    #+#             */
-/*   Updated: 2025/02/10 13:16:07 by restevez         ###   ########.fr       */
+/*   Updated: 2025/02/10 16:14:11 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,10 @@ char		*get_next_line(int fd);
 void		fill_list(t_str_list **list, int fd);
 void		append_str(t_str_list **list, char *str);
 char		*ft_strchr(const char *s, int c);
-char		*transfer_line(t_str_list *list);
+char		*transfer_line(t_str_list **list);
 size_t		get_line_size(t_str_list *list);
 void		cleanup_list(t_str_list **list);
 char		*ft_strdup(const char *s);
+void		*ft_calloc(size_t nmemb, size_t size);
 
 #endif

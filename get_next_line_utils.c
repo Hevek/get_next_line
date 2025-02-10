@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:23:46 by restevez          #+#    #+#             */
-/*   Updated: 2025/02/10 14:38:24 by restevez         ###   ########.fr       */
+/*   Updated: 2025/02/10 16:32:07 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,9 @@
 
 char	*ft_strchr(const char *s, int c)
 {
-	while (*s != (char) c)
+	if (!s)
+		return (NULL);
+	while (*s && *s != (char) c)
 	{
 		if (!*s++)
 			return (NULL);
@@ -28,6 +30,8 @@ size_t	get_line_size(t_str_list *list)
 	size_t	i;
 
 	len = 0;
+	if (!list || !list->str)
+		return (0);
 	while (list)
 	{
 		i = 0;
@@ -94,11 +98,13 @@ char	*ft_strdup(const char *s)
 	char	*duplicate;
 	int		i;
 
+	if (!*s)
+		return (NULL);
 	duplicate = NULL;
 	i = 0;
 	while (s[i] != '\0')
 		i++;
-	duplicate = malloc((sizeof(char) * i) + 1);
+	duplicate = ft_calloc(i + 1, 1);
 	if (duplicate == NULL)
 		return (NULL);
 	i = -1;
@@ -106,4 +112,24 @@ char	*ft_strdup(const char *s)
 		duplicate[i] = s[i];
 	duplicate[i] = '\0';
 	return (duplicate);
+}
+
+void	*ft_calloc(size_t nmemb, size_t size)
+{
+	void	*ptr;
+	size_t	alloc_size;
+	int		i;
+
+	if (nmemb == 0 || size == 0)
+		return (malloc(0));
+	if (nmemb > ((size_t) -1) / size)
+		return (NULL);
+	alloc_size = nmemb * size;
+	ptr = malloc(alloc_size);
+	if (!ptr)
+		return (NULL);
+	i = -1;
+	while ((size_t)++i < alloc_size)
+		((unsigned char *) ptr)[i] = '\0';
+	return (ptr);
 }

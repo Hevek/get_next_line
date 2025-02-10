@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:18:07 by restevez          #+#    #+#             */
-/*   Updated: 2025/02/10 14:37:15 by restevez         ###   ########.fr       */
+/*   Updated: 2025/02/10 16:42:18 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	*get_next_line(int fd);
 	int		n;
 	char	test;
 
-	test = '2';
+	test = '4';
 	if (test == '1')
 	{
 		fd = open(
@@ -69,12 +69,12 @@ char	*get_next_line(int fd)
 
 	line = NULL;
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, line, 0) < 0)
-		return (NULL);
+		return (free(line), NULL);
 	fill_list(&list, fd);
-	line = transfer_line(list);
-	cleanup_list(&list);
+	line = transfer_line(&list);
 	if (!line)
-		return (free(list), NULL);
+		return (cleanup_list(&list), free(list), NULL);
+	cleanup_list(&list);
 	return (line);
 }
 
@@ -86,9 +86,9 @@ void	fill_list(t_str_list **list, int fd)
 
 	b_read = 1;
 	str = NULL;
-	while (str == NULL || !ft_strchr(str, '\n'))
+	while (b_read != 0 && !ft_strchr(str, '\n'))
 	{
-		str = malloc(BUFFER_SIZE + 1);
+		str = ft_calloc(BUFFER_SIZE + 1, 1);
 		if (!str)
 			return (cleanup_list(list));
 		b_read = read(fd, str, BUFFER_SIZE);
@@ -104,9 +104,9 @@ void	append_str(t_str_list **list, char *str)
 	t_str_list	*new;
 	t_str_list	*last;
 
-	new = malloc(sizeof(t_str_list));
+	new = ft_calloc(sizeof(t_str_list), 1);
 	if (!new)
-		return (cleanup_list(list));
+		return (free(str), cleanup_list(list));
 	if (!*list)
 		*list = new;
 	else
@@ -120,29 +120,29 @@ void	append_str(t_str_list **list, char *str)
 	new->next = NULL;
 }
 
-char	*transfer_line(t_str_list *list)
+char	*transfer_line(t_str_list **list)
 {
 	char		*line;
 	size_t		i;
 	size_t		j;
 
-	if (!list || !list->str)
-		return (NULL);
-	line = malloc(get_line_size(list) + 1);
+	line = ft_calloc(get_line_size(*list) + 1, 1);
+	if (!line || !*list || !(*list)->str)
+		return (free(line), cleanup_list(list), NULL);
 	j = -1;
 	while (list)
 	{
 		i = -1;
-		while (list->str[++i])
+		while ((*list)->str[++i])
 		{
-			line[++j] = list->str[i];
-			if (list->str[i] == '\n')
+			line[++j] = (*list)->str[i];
+			if ((*list)->str[i] == '\n')
 			{
 				line[++j] = '\0';
 				return (line);
 			}
 		}
-		list = list->next;
+		(*list) = (*list)->next;
 	}
 	line[++j] = '\0';
 	return (line);
