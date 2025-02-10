@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:18:07 by restevez          #+#    #+#             */
-/*   Updated: 2025/02/10 11:22:07 by restevez         ###   ########.fr       */
+/*   Updated: 2025/02/10 14:37:15 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,37 @@ char	*get_next_line(int fd);
 	char	*line;
 	int		fd;
 	int		n;
+	char	test;
 
-	fd = open("/nfs/homes/restevez/francinette/tests/get_next_line/fsoares/1char.txt", O_RDONLY);
+	test = '2';
+	if (test == '1')
+	{
+		fd = open(
+"/nfs/homes/restevez/francinette/tests/get_next_line/fsoares/1char.txt",
+				O_RDONLY);
+	}
+	else if (test == '2')
+	{
+		fd = open(
+"/nfs/homes/restevez/francinette/tests/get_next_line/fsoares/only_nl.txt",
+				O_RDONLY);
+	}
+	else if (test == '3')
+	{
+		fd = open(
+"/nfs/homes/restevez/francinette/tests/get_next_line/fsoares/giant_line_nl.txt",
+				O_RDONLY);
+	}
+	else if (test == '4')
+	{
+	fd = open(
+"/nfs/homes/restevez/francinette/tests/get_next_line/fsoares/variable_nls.txt",
+				O_RDONLY);
+	}
+	else
+	{
+		fd = open("test", O_RDONLY);
+	}
 	n = 1;
 	line = get_next_line(fd);
 	while (line)
@@ -55,7 +84,7 @@ void	fill_list(t_str_list **list, int fd)
 	int		b_read;
 	char	*str;
 
-	b_read = 0;
+	b_read = 1;
 	str = NULL;
 	while (str == NULL || !ft_strchr(str, '\n'))
 	{
@@ -64,7 +93,7 @@ void	fill_list(t_str_list **list, int fd)
 			return (cleanup_list(list));
 		b_read = read(fd, str, BUFFER_SIZE);
 		if (!b_read)
-			return (free(str), cleanup_list(list));
+			return (free(str));
 		str[BUFFER_SIZE] = '\0';
 		append_str(list, str);
 	}
@@ -97,7 +126,7 @@ char	*transfer_line(t_str_list *list)
 	size_t		i;
 	size_t		j;
 
-	if (!list)
+	if (!list || !list->str)
 		return (NULL);
 	line = malloc(get_line_size(list) + 1);
 	j = -1;
@@ -115,6 +144,6 @@ char	*transfer_line(t_str_list *list)
 		}
 		list = list->next;
 	}
-	line[j] = '\0';
+	line[++j] = '\0';
 	return (line);
 }
