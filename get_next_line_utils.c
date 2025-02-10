@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:23:46 by restevez          #+#    #+#             */
-/*   Updated: 2025/02/10 08:05:38 by restevez         ###   ########.fr       */
+/*   Updated: 2025/02/10 08:47:26 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,22 +68,42 @@ void	cleanup_list(t_str_list **list)
 	char		*str;
 
 	tmp = *list;
-	str = ft_strchr(tmp->str, '\n');
-	while (tmp && str)
+	str = ft_strchr((*list)->str, '\n');
+	while (tmp)
 	{
 		tmp = (*list)->next;
-		str = ft_strchr(tmp->str, '\n');
+		str = ft_strchr((*list)->str, '\n');
 		if (str)
 		{
-			append_str(list, str);
+			append_str(list, ft_strdup(++str));
 			tmp = (*list)->next;
 			free((*list)->str);
 			free(*list);
 			*list = tmp;
+			str = NULL;
 			return ;
 		}
 		free((*list)->str);
 		free(*list);
 		*list = tmp;
 	}
+}
+
+char	*ft_strdup(const char *s)
+{
+	char	*duplicate;
+	int		i;
+
+	duplicate = NULL;
+	i = 0;
+	while (s[i] != '\0')
+		i++;
+	duplicate = malloc((sizeof(char) * i) + 1);
+	if (duplicate == NULL)
+		return (NULL);
+	i = -1;
+	while (s[++i] != '\0')
+		duplicate[i] = s[i];
+	duplicate[i] = '\0';
+	return (duplicate);
 }

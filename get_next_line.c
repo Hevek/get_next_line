@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:18:07 by restevez          #+#    #+#             */
-/*   Updated: 2025/02/10 08:13:20 by restevez         ###   ########.fr       */
+/*   Updated: 2025/02/10 08:48:59 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,14 @@ int	main(void)
 {
 	char	*line;
 	int		fd;
+	int		n;
 
 	fd = open("text", O_RDONLY);
+	n = 1;
 	line = get_next_line(fd);
 	while (line)
 	{
-		printf("%s", line);
+		printf("Line %d: %s", n++, line);
 		line = get_next_line(fd);
 	}
 	close(fd);
@@ -44,7 +46,7 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-
+/*  */
 void	fill_list(t_str_list **list, int fd)
 {
 	int		b_read;
@@ -56,10 +58,10 @@ void	fill_list(t_str_list **list, int fd)
 	{
 		str = malloc(BUFFER_SIZE + 1);
 		if (!str)
-			return (cleanup_list(list)); // for now
+			return (cleanup_list(list));
 		b_read = read(fd, str, BUFFER_SIZE);
 		if (!b_read)
-			return (cleanup_list(list)); // for now
+			return (cleanup_list(list));
 		str[BUFFER_SIZE] = '\0';
 		append_str(list, str);
 	}
@@ -72,7 +74,7 @@ void	append_str(t_str_list **list, char *str)
 
 	new = malloc(sizeof(t_str_list));
 	if (!new)
-		return (cleanup_list(list)); // for now
+		return (cleanup_list(list));
 	if (!*list)
 		*list = new;
 	else
@@ -101,7 +103,10 @@ char	*transfer_line(t_str_list *list)
 		{
 			line[++j] = list->str[i];
 			if (list->str[i] == '\n')
+			{
+				j++;
 				break ;
+			}
 		}
 		list = list->next;
 	}

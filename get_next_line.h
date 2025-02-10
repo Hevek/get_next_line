@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:23:38 by restevez          #+#    #+#             */
-/*   Updated: 2025/02/10 08:06:12 by restevez         ###   ########.fr       */
+/*   Updated: 2025/02/10 08:41:19 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,5 +36,6 @@ char		*ft_strchr(const char *s, int c);
 char		*transfer_line(t_str_list *list);
 size_t		get_line_size(t_str_list *list);
 void		cleanup_list(t_str_list **list);
+char		*ft_strdup(const char *s);
 
 #endif
