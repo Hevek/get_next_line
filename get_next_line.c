@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:18:07 by restevez          #+#    #+#             */
-/*   Updated: 2025/02/10 19:03:33 by restevez         ###   ########.fr       */
+/*   Updated: 2025/02/10 19:46:43 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 char	*get_next_line(int fd);
 
-int	main(void)
+/* int	main(void)
 {
 	char	*line;
 	int		fd;
@@ -67,7 +67,7 @@ int	main(void)
 	free(line);
 	close(fd);
 	return (0);
-}
+} */
 char	*get_next_line(int fd)
 {
 	static t_str_list	*list = NULL;
@@ -115,6 +115,11 @@ void	append_str(t_str_list **list, char *str)
 		return (free(str), cleanup_list(list));
 	if (!*list)
 		*list = new;
+	else if ((*list)->str == NULL)
+	{
+		free(*list);
+		*list = new;
+	}
 	else
 	{
 		last = *list;
