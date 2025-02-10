@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:18:07 by restevez          #+#    #+#             */
-/*   Updated: 2025/02/07 06:01:21 by restevez         ###   ########.fr       */
+/*   Updated: 2025/02/10 08:13:20 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,153 +14,97 @@
 
 char	*get_next_line(int fd);
 
-/* get_next_line((int) file descriptor):
-Return Value:
-	Read line: correct behavior
-	NULL: there is nothing else to read, or an error
-	occurred
-Please note that the returned line should include the terminating \n
-character if it is found (Hence, if the file does not terminate in \n, there's
-nothing to include at the EOL).
-*/
-/*
-TO-DOs:
-[x] max of 10 function because number of turn in files;
-[] explore corner cases, run testers;
- */
-int	main(int argc, char *argv[])
+int	main(void)
 {
-	char	*str;
+	char	*line;
 	int		fd;
-	int		j;
 
-	str = NULL;
-	if (argc < 2)
-		return (1);
-	fd = open(argv[1], O_RDONLY);
-	str = get_next_line(fd);
-	j = 0;
-	while (str)
+	fd = open("text", O_RDONLY);
+	line = get_next_line(fd);
+	while (line)
 	{
-		printf("Line %d: %s", ++j, str);
-		str = get_next_line(fd);
+		printf("%s", line);
+		line = get_next_line(fd);
 	}
+	close(fd);
 	return (0);
 }
 
 char	*get_next_line(int fd)
 {
-	static t_str_list	*buff = NULL;
-	char				*next_line;
+	static t_str_list	*list = NULL;
+	char				*line;
 
-	if (fd <= 0)
+	line = NULL;
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, line, 0) < 0)
 		return (NULL);
-	next_line = get_strings(fd, &buff);
-	if (next_line == NULL)
-		return (NULL);
-	return (next_line);
-}
-
-char	*get_strings(int fd, t_str_list **buff)
-{
-	int					chr_read;
-	char				*str;
-
-	str = malloc(BUFFER_SIZE + 1);
-	chr_read = 1;
-	if (!(*buff))
-	{
-		(*buff) = malloc(sizeof(t_str_list));
-		(*buff)->empty = 1;
-	}
-	while (!ft_strchr(str, '\n'))
-	{
-		chr_read = read(fd, str, BUFFER_SIZE);
-		if (chr_read == -1 || chr_read == 0)
-			return (free(str), cleanup_list(&(*buff)), NULL);
-		str[BUFFER_SIZE] = '\0';
-		append_str(&(*buff), str);
-	}
-	free(str);
-	str = ft_get_line((*buff));
-	cleanup_list(&(*buff));
-	if (!str)
-		return (free(str), NULL);
-	return (str);
-}
-
-char	*ft_get_line(t_str_list *list)
-{
-	t_str_list	*tmp;
-	size_t		len;
-	char		*line;
-	int			i;
-
-	tmp = list;
-	len = 0;
-	while (tmp)
-	{
-		i = -1;
-		while (tmp->str[++i] && tmp->str[i] != '\n')
-			len++;
-		if (tmp->str[i] == '\n')
-		{
-			len++;
-			break ;
-		}
-		tmp = tmp->next;
-	}
-	line = fill_line(&list, len);
-	if (!line)
-		return (NULL);
+	fill_list(&list, fd);
+	line = transfer_line(list);
+	cleanup_list(&list);
 	return (line);
 }
 
-/*
-	full string
 
-	allocate the space for full string
-	while (current node exists)
-	{
-		concatenate (full string + node->string)
-		if (this is the last node)
-		{
-			while (this char exists AND this char is not \n)
-				run through node->string
-			if (we got to the \n)
-			{
-				go to the next char in node->str
-				this node->str will be empty now
-				we add the rest of this string to a new node
-			}
-		}
-	}
-*/
-char	*fill_line(t_str_list **list, size_t len)
+void	fill_list(t_str_list **list, int fd)
 {
-	char		*str;
-	size_t		str_len;
+	int		b_read;
+	char	*str;
 
-	str = malloc(len + 1);
-	str_len = 0;
-	while ((*list))
+	b_read = 0;
+	str = NULL;
+	while (str == NULL || !ft_strchr(str, '\n'))
 	{
-		ft_strcat(str, (*list)->str, len);
-		if ((*list)->next == NULL)
-		{
-			while (*((*list)->str) && *((*list)->str) != '\n' && ++str_len)
-				(*list)->str++;
-			if (*((*list)->str) == '\n')
-			{
-				(*list)->str++;
-				(*list)->empty = 1;
-				append_str(&(*list), (*list)->str);
-				(*list)->next = NULL;
-				(*list) = (*list)->next;
-				continue ;
-			}
-		}
-		(*list) = (*list)->next;
+		str = malloc(BUFFER_SIZE + 1);
+		if (!str)
+			return (cleanup_list(list)); // for now
+		b_read = read(fd, str, BUFFER_SIZE);
+		if (!b_read)
+			return (cleanup_list(list)); // for now
+		str[BUFFER_SIZE] = '\0';
+		append_str(list, str);
 	}
-	return (str);
+}
+
+void	append_str(t_str_list **list, char *str)
+{
+	t_str_list	*new;
+	t_str_list	*last;
+
+	new = malloc(sizeof(t_str_list));
+	if (!new)
+		return (cleanup_list(list)); // for now
+	if (!*list)
+		*list = new;
+	else
+	{
+		last = *list;
+		while (last->next)
+			last = last->next;
+		last->next = new;
+	}
+	new->str = str;
+	new->next = NULL;
+}
+
+char	*transfer_line(t_str_list *list)
+{
+	char		*line;
+	size_t		i;
+	size_t		j;
+
+	line = malloc(get_line_size(list) + 1);
+	j = -1;
+	while (list)
+	{
+		i = -1;
+		while (list->str[++i])
+		{
+			line[++j] = list->str[i];
+			if (list->str[i] == '\n')
+				break ;
+		}
+		list = list->next;
+	}
+	line[j] = '\0';
+	return (line);
 }
