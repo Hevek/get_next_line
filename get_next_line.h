@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:23:38 by restevez          #+#    #+#             */
-/*   Updated: 2025/02/10 08:41:19 by restevez         ###   ########.fr       */
+/*   Updated: 2025/02/10 09:51:40 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define GET_NEXT_LINE_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 10
+#  define BUFFER_SIZE 3
 # endif
 
 # include <unistd.h>
