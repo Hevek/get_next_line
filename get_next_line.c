@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:18:07 by restevez          #+#    #+#             */
-/*   Updated: 2025/02/09 18:46:22 by restevez         ###   ########.fr       */
+/*   Updated: 2025/02/10 04:18:14 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	append_str()
 	
 }
 
-/*
+/* fill_line(list)
 	int		len;
 	char	*line;
 
@@ -81,6 +81,30 @@ char	*fill_line()
 
 }
 
+/* transfer_line(list, str):
+	int	i;
+	int	j;
+
+	if (list == NULL)
+		return ;
+	i = 0;
+	while (list)
+	{
+		j = 0;
+		while (list->str[j])
+		{
+			if (list->str[j] == '\n')
+			{
+				str[i++] = '\n';
+				str[i] = '\0';
+				return ;
+			}
+			str[i++] = list->str[j++];
+		}
+		list = list->next;
+	}
+	str[i] = '\0';
+*/
 void	transfer_line()
 {
 	
