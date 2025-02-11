@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:18:07 by restevez          #+#    #+#             */
-/*   Updated: 2025/02/11 19:47:24 by restevez         ###   ########.fr       */
+/*   Updated: 2025/02/11 19:51:57 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 char	*get_next_line(int fd);
 
-/* #include <stdio.h>
+#include <stdio.h>
+#include <stdio.h>
 int	main(int argc, char *argv[])
 {
 	char	*line;
