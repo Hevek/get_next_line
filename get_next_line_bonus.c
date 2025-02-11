@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:18:07 by restevez          #+#    #+#             */
-/*   Updated: 2025/02/10 22:17:21 by restevez         ###   ########.fr       */
+/*   Updated: 2025/02/10 22:18:26 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*get_next_line(int fd);
 
@@ -30,10 +30,8 @@ char	*get_next_line(int fd);
 				O_RDONLY);
 		line = get_next_line(fd);
 		printf("Line %d: %s", n++, line);
-		free(line);
 		line = get_next_line(fd);
 		printf("Line %d: %s", n++, line);
-		free(line);
 		if (BUFFER_SIZE > 100) {
 			char *temp;
 			do {
@@ -43,7 +41,6 @@ char	*get_next_line(int fd);
 		}
 		line = get_next_line(fd);
 		printf("Line %d: %s", n++, line);
-		free(line);
 		close(fd);
 		return (0);
 	}
@@ -88,16 +85,16 @@ char	*get_next_line(int fd);
 } */
 char	*get_next_line(int fd)
 {
-	static t_str_list	*list = NULL;
+	static t_str_list	*list[1024];
 	char				*line;
 
 	line = NULL;
 	if (fd == -1 || BUFFER_SIZE <= 0)
-		return (cleanup_list(&list, 1), NULL);
-	line = fill_list(&list, fd);
+		return (cleanup_list(&list[fd], 1), NULL);
+	line = fill_list(&list[fd], fd);
 	if (!line)
-		return (cleanup_list(&list, 1), free(list), NULL);
-	cleanup_list(&list, 0);
+		return (cleanup_list(&list[fd], 1), free(list[fd]), NULL);
+	cleanup_list(&list[fd], 0);
 	return (line);
 }
 
