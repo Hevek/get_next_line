@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:18:07 by restevez          #+#    #+#             */
-/*   Updated: 2025/02/09 08:36:28 by restevez         ###   ########.fr       */
+/*   Updated: 2025/02/11 19:40:46 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,51 +14,119 @@
 
 char	*get_next_line(int fd);
 
-/* get_next_line((int) file descriptor):
-Return Value:
-	Read line: correct behavior
-	NULL: there is nothing else to read, or an error
-	occurred
-Please note that the returned line should include the terminating \n
-character if it is found (Hence, if the file does not terminate in \n, there's
-nothing to include at the EOL).
-*/
-/*
-TO-DOs:
-[x] max of 10 function because number of turn in files;
-[] explore corner cases, run testers;
- */
+/* #include <stdio.h>
 int	main(int argc, char *argv[])
 {
 	char	*str;
 	int		fd;
-	int		j;
+	int		n;
+	char	test;
+	size_t	end;
 
-	str = NULL;
-	if (argc < 2)
+	end = 1;
+	if (argc < 1)
 		return (1);
-	fd = open(argv[1], O_RDONLY);
-	str = get_next_line(fd);
-	j = 0;
-	while (str)
+	while (end)
 	{
-		printf("Line %d: %s", ++j, str);
-		str = get_next_line(fd);
+		n = 1;
+		test = '0' + end;
+		if (argc == 2)
+			test = argv[1][0];
+		printf("=======Test %c=======\n\n", test);
+		if (test == '1')
+		{
+			fd = open(
+	"/home/hevek/francinette/tests/get_next_line/fsoares/read_error.txt",
+					O_RDONLY);
+			line = get_next_line(fd);
+			printf("Line %d: %s", n++, line);
+			free(line);
+			line = get_next_line(fd);
+			printf("Line %d: %s", n++, line);
+			free(line);
+			if (BUFFER_SIZE > 100) {
+				char *temp;
+				do {
+					temp = get_next_line(fd);
+					free(temp);
+				} while (temp != NULL);
+			}
+			line = get_next_line(fd);
+			printf("Line %d: %s", n++, line);
+			free(line);
+			close(fd);
+			end++;
+			printf("<- File Ended\n\n\n\n==END_OF_TEST==\n\n");
+			if (argc == 2)
+				return (0);
+			continue ;
+		}
+		else if (test == '2')
+		{
+			fd = open(
+	"/home/hevek/francinette/tests/get_next_line/fsoares/one_line_no_nl.txt",
+					O_RDONLY);
+		}
+		else if (test == '3')
+		{
+			fd = open(
+	"/home/hevek/francinette/tests/get_next_line/fsoares/multiple_nl.txt",
+					O_RDONLY);
+		}
+		else if (test == '4')
+		{
+		fd = open(
+	"/home/hevek/francinette/tests/get_next_line/fsoares/variable_nls.txt",
+					O_RDONLY);
+		}
+		else if (test == '5')
+		{
+		fd = open(
+	"/home/hevek/francinette/tests/get_next_line/fsoares/1char.txt",
+					O_RDONLY);
+		}
+		else
+		{
+			fd = open("test", O_RDONLY);
+		}
+		line = get_next_line(fd);
+		while (line)
+		{
+			printf("Line %d: %s", n++, line);
+			free(line);
+			line = get_next_line(fd);
+		}
+		free(line);
+		if (test == '3')
+		{
+			line = get_next_line(fd);
+			printf("Line: %d: %s", n, line);
+		}
+		close(fd);
+		if (end == 7)
+			break ;
+		end++;
+		if (line == NULL)
+			printf("<- File Ended\n");
+		printf("\n\n\n==END_OF_TEST==\n\n");
+		if (argc == 2)
+			return (0);
 	}
 	return (0);
 }
 
 char	*get_next_line(int fd)
 {
-	static t_str_list	*buff = NULL;
-	char				*next_line;
+	static t_str_list	*list = NULL;
+	char				*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &next_line, 0) < 0)
-		return (NULL);
-	next_line = get_strings(fd, &buff);
-	if (next_line == NULL)
-		return (NULL);
-	return (next_line);
+	line = NULL;
+	if (fd == -1 || BUFFER_SIZE <= 0)
+		return (cleanup_list(&list, 1), NULL);
+	line = fill_list(&list, fd);
+	if (!line)
+		return (cleanup_list(&list, 1), NULL);
+	return (line);
 }
 
 char	*get_strings(int fd, t_str_list **buff)
@@ -78,39 +146,59 @@ char	*get_strings(int fd, t_str_list **buff)
 		str[BUFFER_SIZE] = '\0';
 		append_str(&(*buff), str);
 	}
-	free(str);
-	str = ft_get_line((*buff));
-	destroy_list(&(*buff), NULL, NULL);
-	if (!str)
-		return (free(str), NULL);
-	return (str);
+	return (transfer_line(list));
+}
+
+void	append_str(t_str_list **list, char *str)
+{
+	t_str_list	*new;
+	t_str_list	*last;
+
+	new = ft_calloc(sizeof(t_str_list), 1);
+	if (!new)
+		return (free(str), cleanup_list(list, 1));
+	if (!*list)
+		*list = new;
+	else if ((*list)->str == NULL)
+	{
+		cleanup_list(list, 0);
+		*list = new;
+	}
+	else
+	{
+		last = *list;
+		while (last->next)
+			last = last->next;
+		last->next = new;
+	}
+	new->str = str;
+	new->next = NULL;
 }
 
 char	*ft_get_line(t_str_list *list)
 {
 	t_str_list	*tmp;
-	size_t		len;
-	char		*line;
-	int			i;
 
-	tmp = list;
-	len = 0;
+	if (!*list || !(*list)->str)
+		return (cleanup_list(list, 1), NULL);
+	line = ft_calloc(get_line_size(*list) + 1, 1);
+	if (!line)
+		return (free(line), cleanup_list(list, 1), NULL);
+	j = -1;
+	tmp = *list;
 	while (tmp)
 	{
 		i = -1;
-		while (tmp->str[++i] && tmp->str[i] != '\n')
-			len++;
-		if (tmp->str[i] == '\n')
+		while (tmp->str[++i])
 		{
-			len++;
-			break ;
+			line[++j] = tmp->str[i];
+			if (tmp->str[i] == '\n')
+				return (cleanup_list(list, 0), line[++j] = '\0', line);
 		}
 		tmp = tmp->next;
 	}
-	line = fill_line(&list, len);
-	if (!line)
-		return (NULL);
-	return (line);
+	line[++j] = '\0';
+	return (cleanup_list(list, 0), line);
 }
 
 /*
