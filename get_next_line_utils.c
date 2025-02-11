@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:23:46 by restevez          #+#    #+#             */
-/*   Updated: 2025/02/10 22:09:50 by restevez         ###   ########.fr       */
+/*   Updated: 2025/02/11 19:43:59 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,55 +44,22 @@ size_t	get_line_size(t_str_list *list)
 	return (len);
 }
 
-/* cleanup_list(**list):
-	t_str_list *tmp;
-	char		*str;
-
-	tmp = *list;
-	str = NULL;
-	while (we don't find '\n' and not end of the list)
-	{
-		tmp = list->next;
-		str = ft_strchr(list->str, '\n');
-		if (str)
-		{
-			append_str(list, str);
-			tmp = list->next;
-			free(list->str);
-			free(list);
-			list = tmp;
-			return ;
-		}
-		free(list->str);
-		free(list);
-		list = tmp;
-	}
-*/
-void	cleanup_list(t_str_list **list, size_t error)
+char	*ft_strcat(char *dest, char *src, size_t len)
 {
-	t_str_list	*tmp;
-	char		*str;
-	char		*s_tmp;
+	char	*ret;
+	size_t	i;
 
-	tmp = *list;
-	str = NULL;
-	if (*list)
-		str = ft_strchr((*list)->str, '\n');
-	while (*list)
+	ret = dest;
+	i = 0;
+	while (*dest)
 	{
-		str = ft_strchr((*list)->str, '\n');
-		if (str && error == 0)
-		{
-			s_tmp = (*list)->str;
-			(*list)->str = ft_strdup(++str);
-			free(s_tmp);
-			str = NULL;
-			return ;
-		}
-		tmp = (*list)->next;
-		free((*list)->str);
-		free(*list);
-		*list = tmp;
+		dest++;
+		i++;
+	}
+	while (*src && i < len)
+	{
+		i++;
+		*dest++ = *src++;
 	}
 }
 
