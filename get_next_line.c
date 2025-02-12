@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:18:07 by restevez          #+#    #+#             */
-/*   Updated: 2025/02/11 19:51:57 by restevez         ###   ########.fr       */
+/*   Updated: 2025/02/11 20:36:35 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,7 @@
 
 char	*get_next_line(int fd);
 
-#include <stdio.h>
-#include <stdio.h>
+/* #include <stdio.h>
 int	main(int argc, char *argv[])
 {
 	char	*line;
@@ -33,6 +32,8 @@ int	main(int argc, char *argv[])
 		test = '0' + end;
 		if (argc == 2)
 			test = argv[1][0];
+		if (test == ':')
+			test = 'X';
 		printf("=======Test %c=======\n\n", test);
 		if (test == '1')
 		{
@@ -86,6 +87,30 @@ int	main(int argc, char *argv[])
 	"/home/hevek/francinette/tests/get_next_line/fsoares/1char.txt",
 					O_RDONLY);
 		}
+		else if (test == '6')
+		{
+		fd = open(
+"/home/hevek/42sp/projects/m1/get_next_line/42test-gnl-station-2022/test/1-brouette.txt",
+					O_RDONLY);
+		}
+		else if (test == '7')
+		{
+		fd = open(
+"/home/hevek/42sp/projects/m1/get_next_line/42test-gnl-station-2022/test/4-u.txt",
+					O_RDONLY);
+		}
+		else if (test == '8')
+		{
+		fd = open(
+"/home/hevek/42sp/projects/m1/get_next_line/42test-gnl-station-2022/10-b.txt",
+					O_RDONLY);
+		}
+		else if (test == '9')
+		{
+		fd = open(
+"/home/hevek/42sp/projects/m1/get_next_line/42test-gnl-station-2022/12-bigben.txt",
+					O_RDONLY);
+		}
 		else
 		{
 			fd = open("test", O_RDONLY);
@@ -98,18 +123,18 @@ int	main(int argc, char *argv[])
 			line = get_next_line(fd);
 		}
 		free(line);
-		if (test == '3')
+		if (line == NULL)
+			printf("<- File Ended\n");
+		if (test == '3' || test == '4')
 		{
 			line = get_next_line(fd);
 			printf("Line: %d: %s", n, line);
 		}
 		close(fd);
-		if (end == 7)
-			break ;
 		end++;
-		if (line == NULL)
-			printf("<- File Ended\n");
 		printf("\n\n\n==END_OF_TEST==\n\n");
+		if (test == 'X')
+			break ;
 		if (argc == 2)
 			return (0);
 	}
@@ -167,7 +192,10 @@ void	append_str(t_str_list **list, char *str)
 		*list = new;
 	else if ((*list)->str == NULL)
 	{
-		cleanup_list(list, 0);
+		if ((*list)->next)
+			cleanup_list(list, 1);
+		else
+			cleanup_list(list, 0);
 		*list = new;
 	}
 	else

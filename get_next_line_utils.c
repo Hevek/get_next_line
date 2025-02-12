@@ -6,7 +6,7 @@
 /*   By: restevez <restevez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 07:23:46 by restevez          #+#    #+#             */
-/*   Updated: 2025/02/11 19:47:52 by restevez         ###   ########.fr       */
+/*   Updated: 2025/02/11 19:55:28 by restevez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,22 +44,31 @@ size_t	get_line_size(t_str_list *list)
 	return (len);
 }
 
-char	*ft_strcat(char *dest, char *src, size_t len)
+void	cleanup_list(t_str_list **list, size_t error)
 {
-	char	*ret;
-	size_t	i;
+	t_str_list	*tmp;
+	char		*str;
+	char		*s_tmp;
 
-	ret = dest;
-	i = 0;
-	while (*dest)
+	tmp = *list;
+	str = NULL;
+	if (*list)
+		str = ft_strchr((*list)->str, '\n');
+	while (*list)
 	{
-		dest++;
-		i++;
-	}
-	while (*src && i < len)
-	{
-		i++;
-		*dest++ = *src++;
+		str = ft_strchr((*list)->str, '\n');
+		if (str && error == 0)
+		{
+			s_tmp = (*list)->str;
+			(*list)->str = ft_strdup(++str);
+			free(s_tmp);
+			str = NULL;
+			return ;
+		}
+		tmp = (*list)->next;
+		free((*list)->str);
+		free(*list);
+		*list = tmp;
 	}
 }
 
